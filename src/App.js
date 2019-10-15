@@ -9,6 +9,7 @@ const apis = Object.entries(apifile);
 const getDummyDivPositon = () => {
   // this will not work in cases where flex width of container is more than childs it have
   // and also it can not show another child is available space
+  // 290 is width of our MovieCard
   return Math.floor(window.innerWidth / 290);
 };
 
