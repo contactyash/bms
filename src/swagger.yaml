@@ -1,0 +1,860 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Train Display management system
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all restation paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  # /hello:
+  #   # binds a127 app logic to a route
+  #   x-swagger-router-controller: hello_world
+  #   get:
+  #     description: Returns 'Hello' to the caller
+  #     # used as the method name of the controller
+  #     operationId: hello
+  #     parameters:
+  #       - name: name
+  #         in: query
+  #         description: The name of the person to whom to say hello
+  #         required: false
+  #         type: string
+  #     responses:
+  #       "200":
+  #         description: Success
+  #         schema:
+  #           # a pointer to a definition
+  #           $ref: "#/definitions/HelloWorldResponse"
+  #       # responses may fall through to errors
+  #       default:
+  #         description: Error
+  #         schema:
+  #           $ref: "#/definitions/ErrorResponse"
+  # /station_o:
+  #   # binds a127 app logic to a route
+  #   x-swagger-router-controller: station_controller
+  #   get:
+  #     description: Returns All stations
+  #     # used as the method name of the controller
+  #     operationId: getAllstation_0
+  #     responses:
+  #       "200":
+  #         description: Success
+  #       "404":
+  #         description: Not Found
+  #       "401":
+  #         description: Not Authorized
+  #   post:
+  #     description: Create new station
+  #     # used as the method name of the controller
+  #     operationId: saveStation_0
+  #     parameters:
+  #       - in: body
+  #         name: station_0
+  #         description: The station to create.
+  #         schema:
+  #           type: object
+  #           required:
+  #             - station_code
+  #             - station_name
+  #           properties:
+  #             station_code:
+  #               type: string
+  #             station_name:
+  #               type: string
+  #     responses:
+  #       "200":
+  #         description: Success
+  #       "404":
+  #         description: Not Found
+  #       "401":
+  #         description: Not Authorized
+  /ws/v1/station:
+    x-swagger-router-controller: station_controller
+    get:
+      description: Returns All stations
+      # used as the method name of the controller
+      operationId: getAllStations
+      responses:
+        201:
+          description: All station listing found 
+        500:
+          description: Internal server error.
+    post:
+      summary: Creates a new station.
+      consumes:
+        - application/json
+      operationId: saveStation
+      parameters:
+        - in: body
+          name: station_body
+          required: true
+          description: The station to create.
+          schema:
+            type: object
+            required:
+              - station_code
+              - station_name
+              - is_active
+              - created_by
+            properties:
+              station_code:
+                type: string
+              station_name:
+                type: string
+              is_active:
+                type: number
+              created_by:
+                type: number  
+      responses:
+        201:
+          description: New station created.
+        500:
+          description: Internal server error.
+  /ws/v1/station/{id}:
+    x-swagger-router-controller: station_controller 
+    put:
+      summary: Update a station.
+      consumes:
+        - application/json
+      operationId: updateStation
+      parameters:
+        - in: path
+          name: id
+          description: station code
+          type: string
+          required: true
+        - in: body
+          name: station_body
+          required: true
+          description: Update existing code.
+          schema:
+            type: object
+            required:
+              - station_name
+              - is_active
+              - modified_by
+            properties:
+              station_name:
+                type: string
+              is_active:
+                type: number
+              modified_by:
+                type: number
+      responses:
+        201:
+          description: Success  
+        500:
+          description: Failure  
+    delete:
+      summary: Deleting station.
+      consumes:
+        - application/json
+      operationId: deleteStation
+      parameters:
+        - in: path
+          name: id
+          description: station code
+          type: string
+          required: true
+      responses:
+        201:
+          description: Station Deleted           
+        500:
+          description: Internal server error.
+  /ws/v1/language:
+    x-swagger-router-controller: language_controller
+    get:
+      description: Returns All languages
+      # used as the method name of the controller
+      operationId: getAllLanguages
+      responses:
+        201:
+          description: All language listing found 
+        500:
+          description: Internal server error.
+    post:
+      summary: Creates a new language.
+      consumes:
+        - application/json
+      operationId: saveLanguage
+      parameters:
+        - in: body
+          name: language_body
+          required: true
+          description: The language to create.
+          schema:
+            type: object
+            required:
+              - language_name
+              - font_family
+              - is_active
+              - created_by
+            properties:
+              language_name:
+                type: string
+              font_family:
+                type: string
+              is_active:
+                type: number
+              created_by:
+                type: number  
+                
+      responses:
+        201:
+          description: New language created           
+        500:
+          description: Internal server error.
+  /ws/v1/language/{id}:
+    x-swagger-router-controller: language_controller 
+    put:
+      summary: Update a language.
+      consumes:
+        - application/json
+      operationId: updateLanguage
+      parameters:
+        - in: path
+          name: id
+          description: language id
+          type: number
+          required: true
+        - in: body
+          name: language_body
+          required: true
+          description: Update language code.
+          schema:
+            type: object
+            required:
+              - language_name
+              - font_family
+              - is_active
+              - modified_by
+            properties:
+              language_name:
+                type: string
+              font_family:
+                type: string
+              is_active:
+                type: number
+              modified_by:
+                type: number
+      responses:
+        201:
+          description: Language Updated           
+        500:
+          description: Internal server error.
+    delete:
+      summary: Deleting language.
+      consumes:
+        - application/json
+      operationId: deleteLanguage
+      parameters:
+        - in: path
+          name: id
+          description: language id
+          type: number
+          required: true
+      responses:
+        201:
+          description: Language Deleted           
+        500:
+          description: Internal server error. 
+  /ws/v1/tdoptions:
+    x-swagger-router-controller: train_dpo_controller
+    get:
+      description: Returns All train display options
+      # used as the method name of the controller
+      operationId: getTrainDisplayOptions
+      responses:
+        201:
+          description: All Train Display Options found 
+        500:
+          description: Internal server error.
+    post:
+      summary: Creates a new Train Display Option.
+      consumes:
+        - application/json
+      operationId: saveTrainDisplayOption
+      parameters:
+        - in: body
+          name: train_dpo_body
+          required: true
+          description: The train display option to create.
+          schema:
+            type: object
+            required:
+              - status_time_display
+              - is_twofour_format
+              - auto_update
+              - set_remove_train
+              - created_by
+            properties:
+              status_time_display:
+                type: number
+              is_twofour_format:
+                type: number
+              auto_update:
+                type: number
+              set_remove_train:
+                type: number 
+              created_by:
+                type: number           
+      responses:
+        201:
+          description: New Train Display Option created           
+        500:
+          description: Internal server error.
+  /ws/v1/tdoptions/{id}:
+    x-swagger-router-controller: train_dpo_controller
+    put:
+      summary: Update the train display option.
+      consumes:
+        - application/json
+      operationId: updateTrainDisplayOption
+      parameters:
+        - in: path
+          name: id
+          description: td option id
+          type: number
+          required: true
+        - in: body
+          name: train_dpo_body
+          required: true
+          description: Update existing code.
+          schema:
+            type: object
+            required:
+              - status_time_display
+              - is_twofour_format
+              - auto_update
+              - set_remove_train
+              - modified_by
+            properties:
+              status_time_display:
+                type: number
+              is_twofour_format:
+                type: number
+              auto_update:
+                type: number
+              set_remove_train:
+                type: number
+              modified_by:
+                type: number  
+      responses:
+        201:
+          description: Train Display Option Updated           
+        500:
+          description: Internal server error.  
+  /ws/v1/thoptions:
+    x-swagger-router-controller: train_hpo_controller
+    get:
+      description: Returns All train highlight options
+      # used as the method name of the controller
+      operationId: getTrainHighlightOptions
+      responses:
+        201:
+          description: All Train Highlight Options found 
+        500:
+          description: Internal server error.
+    post:
+      summary: Creates a new Train Highlight Option.
+      consumes:
+        - application/json
+      operationId: saveTrainHighlightOption
+      parameters:
+        - in: body
+          name: train_hpo_body
+          required: true
+          description: The train highlight option to create.
+          schema:
+            type: object
+            required:
+              - is_blinking
+              - blink_color
+              - created_by
+            properties:
+              is_blinking:
+                type: number
+              blink_color:
+                type: string
+              created_by:
+                type: number           
+      responses:
+        201:
+          description: New Train Highlight Option created           
+        500:
+          description: Internal server error.
+  /ws/v1/thoptions/{id}:
+    x-swagger-router-controller: train_hpo_controller
+    put:
+      summary: Update the train display option.
+      consumes:
+        - application/json
+      operationId: updateTrainHighlightOption
+      parameters:
+        - in: path
+          name: id
+          description: highlight_id
+          type: number
+          required: true
+        - in: body
+          name: train_hpo_body
+          required: true
+          description: Update existing code.
+          schema:
+            type: object
+            required:
+              - is_blinking
+              - blink_color
+              - modified_by
+            properties:
+              is_blinking:
+                type: number
+              blink_color:
+                type: string
+              modified_by:
+                type: number  
+      responses:
+        201:
+          description: Train Highlight Option Updated           
+        500:
+          description: Internal server error.             
+  /ws/v1/train:
+    x-swagger-router-controller: train_controller
+    get:
+      description: Returns All trains
+      # used as the method name of the controller
+      operationId: getAllTrains
+      responses:
+        201:
+          description: All train listing found 
+        500:
+          description: Internal server error.
+    post:
+      summary: Creates a new train.
+      consumes:
+        - application/json
+      operationId: saveTrain
+      parameters:
+        - in: body
+          name: train_body
+          required: true
+          description: The train to create.
+          schema:
+            type: object
+            required:
+              - train_number
+              - train_name
+              - source_id
+              - destination_id
+              - arrival_time
+              - departure_time
+              - arrival_schedule
+              - departure_schedule
+              - platform
+              - is_active
+              - created_by
+            properties:
+              train_number:
+                type: string
+              train_name:
+                type: string
+              source_id:
+                type: string
+              destination_id:
+                type: string
+              arrival_time:
+                type: string
+              departure_time:
+                type: string  				
+              arrival_schedule:
+                type: string
+              departure_schedule:
+                type: string
+              platform:
+                type: number   
+              is_active:
+                type: number  				
+              created_by:
+                type: number
+      responses:
+        201:
+          description: New train created           
+        500:
+          description: Internal server error.
+  /ws/v1/train/{id}:
+    x-swagger-router-controller: train_controller
+    put:
+      summary: Update a train.
+      consumes:
+        - application/json
+      operationId: updateTrain
+      parameters:
+        - in: path
+          name: id
+          description: train_number
+          type: string
+          required: true
+        - in: body
+          name: train_body
+          required: true
+          description: Update existing code.
+          schema:
+            type: object
+            required:
+              - source_id
+              - destination_id
+              - arrival_time
+              - departure_time
+              - arrival_schedule
+              - departure_schedule
+              - platform
+              - is_active
+              - modified_by
+            properties:
+              train_name:
+                type: string
+              source_id:
+                type: string  
+              destination_id:
+                type: string
+              arrival_time:
+                type: string
+              departure_time:
+                type: string  				
+              arrival_schedule:
+                type: string
+              departure_schedule:
+                type: string
+              platform:
+                type: number  
+              is_active:
+                type: number
+              modified_by:
+                type: number
+      responses:
+        201:
+          description: Train Updated           
+        500:
+          description: Internal server error.
+    delete:
+      summary: Deleting train.
+      consumes:
+        - application/json
+      operationId: deleteTrain
+      parameters:
+        - in: path
+          name: id
+          description: train_number
+          type: string
+          required: true
+      responses:
+        201:
+          description: Train Deleted           
+        500:
+          description: Internal server error. 
+  /ws/v1/user:
+    x-swagger-router-controller: user_controller
+    get:
+      description: Returns All users
+      # used as the method name of the controller
+      operationId: getAllUsers
+      responses:
+        201:
+          description: All user listing found 
+        500:
+          description: Internal server error.
+    post:
+      summary: Creates a new user.
+      consumes:
+        - application/json
+      operationId: saveUser
+      parameters:
+        - in: body
+          name: user_body
+          required: true
+          description: The user to create.
+          schema:
+            type: object
+            required:
+              - user_name
+              - user_password
+              - privileges
+              - is_active
+              - created_by
+            properties:
+              user_name:
+                type: string
+              user_password:
+                type: string
+              privileges:
+                type: string  
+              is_active:
+                type: number
+              created_by:
+                type: number  
+      responses:
+        201:
+          description: New user created           
+        500:
+          description: Internal server error.
+  /ws/v1/user_login:
+    x-swagger-router-controller: user_controller
+
+    post:
+      summary: Checking user  authentication.
+      consumes:
+        - application/json
+      operationId: authenticateUser
+      parameters:
+        - in: body
+          name: user_body
+          required: true
+          description: The user to authenticate.
+          schema:
+            type: object
+            required:
+              - user_name
+              - user_password
+              
+            properties:
+              user_name:
+                type: string
+              user_password:
+                type: string
+              
+      responses:
+        201:
+          description: New user created           
+        500:
+          description: Internal server error.
+  /ws/v1/user/{id}:
+    x-swagger-router-controller: user_controller
+    put:
+      summary: Update a user.
+      consumes:
+        - application/json
+      operationId: updateUser
+      parameters:
+        - in: path
+          name: id
+          description: user_id
+          type: number
+          required: true
+        - in: body
+          name: user_body
+          required: true
+          description: Update existing code.
+          schema:
+            type: object
+            required:
+              - user_name
+              - user_password
+              - privileges
+              - is_active
+              - modified_by
+            properties:
+              user_name:
+                type: string
+              user_password:
+                type: string
+              privileges:
+                type: string  
+              is_active:
+                type: number
+              modified_by:
+                type: number
+      responses:
+        201:
+          description: User Updated           
+        500:
+          description: Internal server error.
+    delete:
+      summary: Deleting user.
+      consumes:
+        - application/json
+      operationId: deleteUser
+      parameters:
+        - in: path
+          name: id
+          description: user_id
+          type: number
+          required: true
+      responses:
+        201:
+          description: User Deleted           
+        500:
+          description: Internal server error.
+  /ws/v1/changepwd:
+    x-swagger-router-controller: user_controller
+    put:
+      summary: Change Password of the logged in user
+      consumes:
+        - application/json
+      operationId: changePassword
+      parameters:
+        - in: body
+          name: user_body
+          required: true
+          description: Change Password.
+          schema:
+            type: object
+            required:
+              - user_id  
+              - user_password
+              - modified_by
+            properties:
+              user_id:
+                type: number
+              user_password:
+                type: string
+              modified_by:
+                type: number
+      responses:
+        201:
+          description: Password Changed Successfully           
+        500:
+          description: Internal server error.
+  /ws/v1/fileassoc:
+    x-swagger-router-controller: file_assoc_controller
+    get:
+      description: Returns All File associations
+      # used as the method name of the controller
+      operationId: getAllFileAssociations
+      responses:
+        201:
+          description: All file associations listing  
+        500:
+          description: Internal server error.
+    post:
+      summary: Creates a new file association.
+      consumes:
+        - application/json
+      operationId: saveFileAssociation
+      parameters:
+        - in: body
+          name: file_assoc_body
+          required: true
+          description: The file_assoc to create.
+          schema:
+            type: object
+            required:
+              - file_assoc_cat_id
+              - file_assoc_name_id
+              - assoc_name
+              - is_active
+              - created_by
+            properties:
+              file_assoc_cat_id:
+                type: number
+              file_assoc_name_id:
+                type: string  
+              assoc_name:
+                type: string
+              language_id:
+                type: number
+              audio_file:  
+                type: string		
+              is_active:
+                type: number
+              created_by:
+                type: number  
+      responses:
+        201:
+          description: New file_assoc created           
+        500:
+          description: Internal server error.
+  /ws/v1/fileassoc/{id}:
+    x-swagger-router-controller: file_assoc_controller
+    put:
+      summary: Update a file_assoc.
+      consumes:
+        - application/json
+      operationId: updateFileAssociation
+      parameters:
+        - in: path
+          name: id
+          description: file_assoc_id
+          type: number
+          required: true
+        - in: body
+          name: file_assoc_body
+          required: true
+          description: Update existing code.
+          schema:
+            type: object
+            required:
+              - file_assoc_cat_id
+              - file_assoc_name_id
+              - assoc_name
+              - is_active
+              - modified_by
+            properties:
+              file_assoc_cat_id:
+                type: number
+              file_assoc_name_id:
+                type: string  
+              assoc_name:
+                type: string
+              language_id:
+                type: number
+              audio_file:
+                type: string  
+              is_active:
+                type: number
+              modified_by:
+                type: number
+      responses:
+        201:
+          description: File Association Updated           
+        500:
+          description: Internal server error.
+    delete:
+      summary: Deleting file_assoc.
+      consumes:
+        - application/json
+      operationId: deleteFileAssociation
+      parameters:
+        - in: path
+          name: id
+          description: file_assoc_id
+          type: number
+          required: true
+      responses:
+        201:
+          description: FileAssociation Deleted           
+        500:
+          description: Internal server error.
+  /ws/v1/assocbycat/{id}:
+    x-swagger-router-controller: file_assoc_controller
+    get:
+      summary: Returns all association names for selected association category.
+      consumes:
+        - application/json
+      # used as the method name of the controller
+      operationId: getAllAssocNamesOnCategory
+      parameters:
+        - in: path
+          name: id
+          type: number
+          required: true
+          description: Returns all association names for selected association category
+      responses:
+        201:
+          description: All association names based on the selected category  
+        500:
+          description: Internal server error.		            
+  /swagger:
+    x-swagger-pipe: swagger_raw
